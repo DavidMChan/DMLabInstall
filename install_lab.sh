@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ -z "${LAB_DIRNAME}" ]]; then
+  LAB_DIRECTORY_NAME="lab"
+else
+  LAB_DIRECTORY_NAME="${LAB_DIRNAME}"
+fi
+
 set -e
 
 function install_homebrew {
@@ -20,11 +26,11 @@ echo "Checking if homebrew is installed..."
 brew --version > /dev/null || install_homebrew
 
 # Check for brew packages
-install_brew_maybe glib
-install_brew_maybe sdl2
-install_brew_maybe python3
-install_brew_maybe python2
-install_brew_maybe numpy
+install_brew_maybe glib || echo "GLIB Installed."
+install_brew_maybe sdl2 || echo "SDL2 Installed."
+install_brew_maybe python3 || echo "Python 3 Installed."
+install_brew_maybe python2 || echo "Python 2 Installed."
+install_brew_maybe numpy || echo "Numpy Installed."
 
 # Install bazel
 brew cask list homebrew/cask-versions/adoptopenjdk8 || brew cask install homebrew/cask-versions/adoptopenjdk8
@@ -42,11 +48,12 @@ PYTHON_VERSION=$(brew ls python3 --versions | xargs -n1 | sort | xargs | rev | c
 
 # Clone the DMLab install
 git clone https://github.com/DavidMChan/DMLabInstall.git || echo "Cloning DMLabInstall repository failed..."
-git clone https://github.com/deepmind/lab.git || echo "Cloning failed... We're going to keep trying..."
-cd lab && git checkout 5602604ae85d39950d43274a6bbfaff55b8d7314 || ( echo "Error: Failure checking out repository" && exit 1 )
+git clone https://github.com/deepmind/lab.git $LAB_DIRECTORY_NAME || echo "Cloning failed... We're going to keep trying..."
+cd $LAB_DIRECTORY_NAME && git fetch --all && git checkout 5602604ae85d39950d43274a6bbfaff55b8d7314 || ( echo "Error: Failure checking out repository" && exit 1 )
 
 # Copy the data from our lab version to the target lab version
 rsync -avh ../DMLabInstall/lab/ .
+rm -rf ../DMLabInstall
 
 # Update the SDL and Python paths
 sed -i '.bak' "s/glib\/2.62.1/glib\/$GLIB_VERSION/g" WORKSPACE
