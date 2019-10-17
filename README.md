@@ -1,2 +1,3 @@
 # DMLabInstall
-Installation Files for Deepmind Lab
+
+This is code for installing DeepMind Lab.
