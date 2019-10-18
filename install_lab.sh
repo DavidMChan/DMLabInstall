@@ -51,10 +51,6 @@ git clone https://github.com/DavidMChan/DMLabInstall.git || echo "Cloning DMLabI
 git clone https://github.com/deepmind/lab.git $LAB_DIRECTORY_NAME || echo "Cloning failed... We're going to keep trying..."
 cd $LAB_DIRECTORY_NAME && git fetch --all && git checkout 5602604ae85d39950d43274a6bbfaff55b8d7314 || ( echo "Error: Failure checking out repository" && exit 1 )
 
-# Copy the data from our lab version to the target lab version
-rsync -avh ../DMLabInstall/lab/ .
-rm -rf ../DMLabInstall
-
 # Update the SDL and Python paths
 sed -i '.bak' "s/glib\/2.62.1/glib\/$GLIB_VERSION/g" WORKSPACE
 sed -i '' "s/sdl2\/2.0.10/sdl2\/$SDL_VERSION/g" WORKSPACE
@@ -67,4 +63,10 @@ echo "run -c opt --python_version=PY3 --apple_platform_type=macos --define graph
 
 # Build the library
 bazel build //:deepmind_lab.so
+
+# Copy the data from our lab version to the target lab version
+rsync -avh ../DMLabInstall/lab/ .
+rm -rf ../DMLabInstall
+
+# Demonstrate that this works
 bazel run //:python_random_agent -- --length=10000 --width=640 --height=480
