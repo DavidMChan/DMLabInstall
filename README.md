@@ -12,5 +12,6 @@ in the directory that you want to install DMLab.
 
 If you want to change the name of the lab folder, use the command:
 ```bash
-LAB_DIRNAME=mylab curl https://raw.githubusercontent.com/DavidMChan/DMLabInstall/master/install_lab.sh | bash
+export LAB_DIRNAME=mylab 
+curl https://raw.githubusercontent.com/DavidMChan/DMLabInstall/master/install_lab.sh | bash
 ```
