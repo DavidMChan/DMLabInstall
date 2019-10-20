@@ -28,10 +28,21 @@ brew --version > /dev/null || install_homebrew
 # Check for brew packages
 install_brew_maybe coreutils || echo "CoreUtils Installed."
 install_brew_maybe glib || echo "GLIB Installed."
-install_brew_maybe sdl2 || echo "SDL2 Installed."
 install_brew_maybe python3 || echo "Python 3 Installed."
 install_brew_maybe python2 || echo "Python 2 Installed."
 install_brew_maybe numpy || echo "Numpy Installed."
+
+if [ "$(sw_vers -productVersion)" == "10.15" ]; then
+	if [ -z "$(brew ls --versions sdl2 | grep HEAD)" ]; then
+		echo "Installing HEAD version of SDL2 on OSX Catalina"
+		brew unlink sdl2 || "Unliked current SDL2"
+		brew install sdl2 --HEAD || "Installed HEAD SDL2"
+	fi
+	SDL_VERSION=$(brew ls sdl2 --versions | xargs -n1 | grep HEAD)
+else
+	install_brew_maybe sdl2 || echo "SDL2 Installed."
+	SDL_VERSION=$(brew ls sdl2 --versions | xargs -n1 | sort | xargs | rev | cut -d' ' -f 2 | rev)
+fi
 
 # Install bazel
 brew cask list homebrew/cask-versions/adoptopenjdk8 || brew cask install homebrew/cask-versions/adoptopenjdk8
@@ -41,11 +52,15 @@ brew outdated bazel || brew upgrade -v bazel # We need the latest bazel version
 # Make sure numpy is installed in python as well as for C++ libs
 python3 -m pip install --upgrade numpy
 
-# Get versions for SDL and Python3
+# Get versions for glib and Python3
 GLIB_VERSION=$(brew ls glib --versions | xargs -n1 | sort | xargs | rev | cut -d' ' -f 2 | rev)
-SDL_VERSION=$(brew ls sdl2 --versions | xargs -n1 | sort | xargs | rev | cut -d' ' -f 2 | rev)
 PYTHON_VERSION=$(brew ls python3 --versions | xargs -n1 | sort | xargs | rev | cut -d' ' -f 2 | rev)
 # PYTHON2_VERSION=$(brew ls python2 --versions | xargs -n1 | sort | xargs | rev | cut -d' ' -f 3 | rev)
+
+echo "Using SDL version $SDL_VERSION"
+echo "Using GLIB version $GLIB_VERSION"
+echo "Using Python version $PYTHON_VERSION"
+
 
 # Clone the DMLab install
 git clone https://github.com/DavidMChan/DMLabInstall.git || echo "Cloning DMLabInstall repository failed..."
@@ -64,7 +79,8 @@ echo "run -c opt --python_version=PY3 --apple_platform_type=macos --define graph
 
 # Patch the BUILD file on catalina
 if [ "$(sw_vers -productVersion)" == "10.15" ]; then
-	git patch BUILD ../DMLabInstall/catalina_BUILD.patch
+	echo "Patching BUILD on OSX Catalina"
+	git apply ../DMLabInstall/catalina_BUILD.patch
 fi
 
 # Build the library
