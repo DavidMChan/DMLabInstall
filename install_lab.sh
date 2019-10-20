@@ -26,6 +26,7 @@ echo "Checking if homebrew is installed..."
 brew --version > /dev/null || install_homebrew
 
 # Check for brew packages
+install_brew_maybe coreutils || echo "CoreUtils Installed."
 install_brew_maybe glib || echo "GLIB Installed."
 install_brew_maybe sdl2 || echo "SDL2 Installed."
 install_brew_maybe python3 || echo "Python 3 Installed."
@@ -60,6 +61,11 @@ sed -i '.bak' "s/3.7.4_1/$PYTHON_VERSION/g" python.BUILD
 # Write the BazelRC file
 echo "build -c opt --python_version=PY3 --apple_platform_type=macos --define graphics=sdl" > .bazelrc
 echo "run -c opt --python_version=PY3 --apple_platform_type=macos --define graphics=sdl" >> .bazelrc
+
+# Patch the BUILD file on catalina
+if [ "$(sw_vers -productVersion)" == "10.15" ]; then
+	git patch BUILD ../DMLabInstall/catalina_BUILD.patch
+fi
 
 # Build the library
 bazel build //:deepmind_lab.so
