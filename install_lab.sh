@@ -68,7 +68,7 @@ git clone https://github.com/deepmind/lab.git $LAB_DIRECTORY_NAME || echo "Cloni
 cd $LAB_DIRECTORY_NAME && git checkout macos && git fetch --all && git checkout c2f250145e7720c9ff2cb135097be0be4ca1ec87 || ( echo "Error: Failure checking out repository" && exit 1 )
 
 # Update the SDL and Python paths
-sed -i '.bak' "s/glib\/2.62.1/glib\/$GLIB_VERSION/g" WORKSPACE
+sed -i '.bak' "s/glib\/2.62.2/glib\/$GLIB_VERSION/g" WORKSPACE
 sed -i '' "s/sdl2\/2.0.10/sdl2\/$SDL_VERSION/g" WORKSPACE
 sed -i '.bak' "s/3.7.4_1/$PYTHON_VERSION/g" python.BUILD
 # sed -i '' "s/2.7.16_1/$PYTHON2_VERSION/g" python.BUILD
