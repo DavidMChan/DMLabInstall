@@ -70,7 +70,7 @@ cd $LAB_DIRECTORY_NAME && git checkout macos || ( echo "Error: Failure checking 
 # Update the SDL and Python paths
 sed -i '.bak' "s/glib\/2.62.3/glib\/$GLIB_VERSION/g" WORKSPACE
 sed -i '' "s/sdl2\/2.0.10/sdl2\/$SDL_VERSION/g" WORKSPACE
-sed -i '.bak' "s/3.7.4_1/$PYTHON_VERSION/g" python.BUILD
+sed -i '.bak' "s/3.7.4_1/$PYTHON_VERSION/g" bazel/python.BUILD
 # sed -i '' "s/2.7.16_1/$PYTHON2_VERSION/g" python.BUILD
 
 # Write the BazelRC file
