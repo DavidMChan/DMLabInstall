@@ -65,7 +65,7 @@ echo "Using Python version $PYTHON_VERSION"
 # Clone the DMLab install
 git clone https://github.com/DavidMChan/DMLabInstall.git || echo "Cloning DMLabInstall repository failed..."
 git clone https://github.com/deepmind/lab.git $LAB_DIRECTORY_NAME || echo "Cloning failed... We're going to keep trying..."
-cd $LAB_DIRECTORY_NAME && git checkout macos && git fetch --all && git checkout c2f250145e7720c9ff2cb135097be0be4ca1ec87 || ( echo "Error: Failure checking out repository" && exit 1 )
+cd $LAB_DIRECTORY_NAME && git checkout macos || ( echo "Error: Failure checking out repository" && exit 1 )
 
 # Update the SDL and Python paths
 sed -i '.bak' "s/glib\/2.62.3/glib\/$GLIB_VERSION/g" WORKSPACE
