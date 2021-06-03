@@ -83,8 +83,6 @@ if [ "$(sw_vers -productVersion)" == "10.15" ]; then
 	git apply ../DMLabInstall/catalina_BUILD.patch
 fi
 
-xcode-select --install
-sudo xcodebuild -license accept
 export BAZEL_VERSION=4.1.0
 curl -fLO "https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel-${BAZEL_VERSION}-installer-darwin-x86_64.sh"
 chmod +x "bazel-${BAZEL_VERSION}-installer-darwin-x86_64.sh"
