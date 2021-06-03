@@ -84,11 +84,11 @@ if [ "$(sw_vers -productVersion)" == "10.15" ]; then
 fi
 
 # Build the library
-bazel build //:deepmind_lab.so
+~/bin/bazel build //:deepmind_lab.so
 
 # Copy the data from our lab version to the target lab version
 rsync -avh ../DMLabInstall/lab/ .
 rm -rf ../DMLabInstall
 
 # Demonstrate that this works
-bazel run //:python_random_agent -- --length=10000 --width=640 --height=480
+~/bin/bazel run //:python_random_agent -- --length=10000 --width=640 --height=480
